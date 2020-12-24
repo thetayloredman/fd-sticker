@@ -63,7 +63,6 @@ foxley.on('message', (message) => {
     if (message.content.toLowerCase().startsWith(foxleyPrefix)) {
         let cmd = message.content.slice(foxleyPrefix.length).split(/ +/g)[0].toLowerCase();
         if (cmd === 'help') {
-            console.log(foxley.images)
             message.reply(`FDSticker module Foxley Affection (prefix \`fa!\`)
 
 Loaded stickers: ${foxley.images.reduce((cur, val, key) => cur + '\n' + key, '')}`,);
@@ -78,7 +77,6 @@ foxxo.on('message', (message) => {
     if (message.content.toLowerCase().startsWith(foxxoPrefix)) {
         let cmd = message.content.slice(foxxoPrefix.length).split(/ +/g)[0].toLowerCase();
         if (cmd === 'help') {
-            console.log(foxley.images)
             message.reply(`FDSticker module Foxxo (prefix \`fx!\`)
 
 Loaded stickers: ${foxxo.images.reduce((cur, val, key) => cur + '\n' + key, '')}`,);
