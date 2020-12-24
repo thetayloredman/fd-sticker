@@ -24,11 +24,14 @@ const fs = require('fs');
 
 const foxleyPrefix = 'fa!';
 const foxxoPrefix = 'fx!';
+const boaPrefix = 'b!';
 
 const foxley = new discord.Client();
 foxley.images = new discord.Collection();
 const foxxo = new discord.Client();
 foxxo.images = new discord.Collection();
+const boa = new discord.Client();
+boa.images = new discord.Collection();
 
 foxley.log = function log(message) {
     console.log(chalk.red('Foxley: ') + message);
@@ -36,10 +39,14 @@ foxley.log = function log(message) {
 foxxo.log = function log(message) {
     console.log(chalk.red('Foxxo: ') + message);
 }
+boa.log = function log(message) {
+    console.log(chalk.red('Boa: ') + message);
+}
 
 foxley.on('ready', () => {
     foxley.log('OwO I\'m ready!');
     foxley.log(`Prefix: "${foxleyPrefix}"`);
+    foxley.user.setActivity('you call me a cutie | fa!help', { type: 'LISTENING' });
     const images = fs.readdirSync('./images/foxley/');
     for (const image of images) {
         foxley.images.set(image.replace(/\..+/g, ''), `./images/foxley/${image}`);
@@ -49,12 +56,23 @@ foxley.on('ready', () => {
 foxxo.on('ready', () => {
     foxxo.log('OwO I\'m ready!');
     foxxo.log(`Prefix: "${foxxoPrefix}"`);
+    foxxo.user.setActivity('you say OwO | fx!help', { type: 'WATCHING' });
     const images = fs.readdirSync('./images/foxxo/');
     for (const image of images) {
         foxxo.images.set(image.replace(/\..+/g, ''), `./images/foxxo/${image}`);
         foxxo.log(`Loaded image ${image} as ${image.replace(/\..+/g, '')}!`);
     }
 });
+boa.on('ready', () => {
+    boa.log('OwO I\'m ready!');
+    boa.log(`Prefix: "${boaPrefix}"`);
+    boa.user.setActivity('dhweufh', { type: 'WATCHING' });
+    const images = fs.readdirSync('./images/boa/');
+    for (const image of images) {
+        boa.images.set(image.replace(/\..+/g, ''), `./images/boa/${image}`);
+        boa.log(`Loaded image ${image} as ${image.replace(/\..+/g, '')}!`);
+    }
+})
 
 // handlers
 foxley.on('message', (message) => {
@@ -63,7 +81,7 @@ foxley.on('message', (message) => {
     if (message.content.toLowerCase().startsWith(foxleyPrefix)) {
         let cmd = message.content.slice(foxleyPrefix.length).split(/ +/g)[0].toLowerCase();
         if (cmd === 'help') {
-            message.reply(`FDSticker module Foxley Affection (prefix \`fa!\`)
+            message.reply(`FDSticker module Foxley Affection (prefix \`${foxleyPrefix}\`)
 
 Loaded stickers: ${foxley.images.reduce((cur, val, key) => cur + '\n' + key, '')}`,);
         }
@@ -77,18 +95,33 @@ foxxo.on('message', (message) => {
     if (message.content.toLowerCase().startsWith(foxxoPrefix)) {
         let cmd = message.content.slice(foxxoPrefix.length).split(/ +/g)[0].toLowerCase();
         if (cmd === 'help') {
-            message.reply(`FDSticker module Foxxo (prefix \`fx!\`)
+            message.reply(`FDSticker module Foxxo (prefix \`${foxxoPrefix}\`)
 
 Loaded stickers: ${foxxo.images.reduce((cur, val, key) => cur + '\n' + key, '')}`,);
         }
         if (!foxxo.images.get(cmd)) return;
         message.reply('', { files: [foxxo.images.get(cmd)] });
     }
-})
+});
+boa.on('message', (message) => {
+    if (message.author.bot || message.channel.type === 'dm') return;
+    
+    if (message.content.toLowerCase().startsWith(boaPrefix)) {
+        let cmd = message.content.slice(boaPrefix.length).split(/ +/g)[0].toLowerCase();
+        if (cmd === 'help') {
+            message.reply(`FDSticker module Boa (prefix \`${boaPrefix}\`)
+
+Loaded stickers: ${boa.images.reduce((cur, val, key) => cur + '\n' + key, '')}`,);
+        }
+        if (!boa.images.get(cmd)) return;
+        message.reply('', { files: [boa.images.get(cmd)] });
+    }
+});
 
 // login
 foxley.login(tokens.foxley);
 foxxo.login(tokens.foxxo);
+boa.login(tokens.boa);
 
 // exit on sigint
 process.on('SIGINT', () => {
@@ -98,5 +131,8 @@ process.on('SIGINT', () => {
     foxxo.log('Shutting down...');
     foxxo.destroy();
     foxxo.log('Offline.');
+    boa.log('Shutting down...');
+    boa.destroy();
+    boa.log('Offline.');
     process.exit();
 });
