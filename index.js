@@ -60,8 +60,14 @@ foxxo.on('ready', () => {
 foxley.on('message', (message) => {
     if (message.author.bot || message.channel.type === 'dm') return;
 
-    if (message.content.startsWith(foxleyPrefix)) {
-        let cmd = message.content.slice(foxleyPrefix.length).split(/ +/g)[0];
+    if (message.content.toLowerCase().startsWith(foxleyPrefix)) {
+        let cmd = message.content.slice(foxleyPrefix.length).split(/ +/g)[0].toLowerCase();
+        if (cmd === 'help') {
+            console.log(foxley.images)
+            message.reply(`FDSticker module Foxley Affection (prefix \`fa!\`)
+
+Loaded stickers: ${foxley.images.reduce((cur, val, key) => cur + '\n' + key, '')}`,);
+        }
         if (!foxley.images.get(cmd)) return;
         message.reply('', { files: [foxley.images.get(cmd)] });
     }
@@ -69,8 +75,14 @@ foxley.on('message', (message) => {
 foxxo.on('message', (message) => {
     if (message.author.bot || message.channel.type === 'dm') return;
     
-    if (message.content.startsWith(foxxoPrefix)) {
-        let cmd = message.content.slice(foxxoPrefix.length).split(/ +/g)[0];
+    if (message.content.toLowerCase().startsWith(foxxoPrefix)) {
+        let cmd = message.content.slice(foxxoPrefix.length).split(/ +/g)[0].toLowerCase();
+        if (cmd === 'help') {
+            console.log(foxley.images)
+            message.reply(`FDSticker module Foxxo (prefix \`fx!\`)
+
+Loaded stickers: ${foxxo.images.reduce((cur, val, key) => cur + '\n' + key, '')}`,);
+        }
         if (!foxxo.images.get(cmd)) return;
         message.reply('', { files: [foxxo.images.get(cmd)] });
     }
@@ -79,3 +91,14 @@ foxxo.on('message', (message) => {
 // login
 foxley.login(tokens.foxley);
 foxxo.login(tokens.foxxo);
+
+// exit on sigint
+process.on('SIGINT', () => {
+    foxley.log('Shutting down...');
+    foxley.destroy();
+    foxley.log('Offline.')
+    foxxo.log('Shutting down...');
+    foxxo.destroy();
+    foxxo.log('Offline.');
+    process.exit();
+});
