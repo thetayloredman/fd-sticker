@@ -57,7 +57,7 @@ boa.log = function log(message) {
 foxley.on('ready', () => {
     foxley.log('OwO I\'m ready!');
     foxley.log(`Prefix: "${foxleyPrefix}"`);
-    foxley.user.setActivity('you call me a cutie | fa!help', { type: 'LISTENING' });
+    foxley.user.setActivity(`you call me a cutie | ${foxleyPrefix}help`, { type: 'WATCHING' });
     const images = fs.readdirSync('./images/foxley/');
     for (const image of images) {
         foxley.images.set(image.replace(/\..+/g, ''), `./images/foxley/${image}`);
@@ -67,7 +67,7 @@ foxley.on('ready', () => {
 foxxo.on('ready', () => {
     foxxo.log('OwO I\'m ready!');
     foxxo.log(`Prefix: "${foxxoPrefix}"`);
-    foxxo.user.setActivity('you say OwO | fx!help', { type: 'WATCHING' });
+    foxxo.user.setActivity(`you say OwO | ${foxxoPrefix}help`, { type: 'WATCHING' });
     const images = fs.readdirSync('./images/foxxo/');
     for (const image of images) {
         foxxo.images.set(image.replace(/\..+/g, ''), `./images/foxxo/${image}`);
@@ -77,7 +77,7 @@ foxxo.on('ready', () => {
 boa.on('ready', () => {
     boa.log('OwO I\'m ready!');
     boa.log(`Prefix: "${boaPrefix}"`);
-    boa.user.setActivity('dhweufh', { type: 'WATCHING' });
+    boa.user.setActivity(`dhweufh | ${boaPrefix}help`, { type: 'WATCHING' });
     const images = fs.readdirSync('./images/boa/');
     for (const image of images) {
         boa.images.set(image.replace(/\..+/g, ''), `./images/boa/${image}`);
