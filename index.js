@@ -18,13 +18,24 @@
 
 const discord = require('discord.js');
 const chalk = require('chalk');
+const fs = require('fs');
+const express = require('express');
 
 const tokens = require('./tokens.json');
-const fs = require('fs');
+const app = new express();
 
 const foxleyPrefix = 'fa!';
 const foxxoPrefix = 'fx!';
 const boaPrefix = 'b!';
+
+// status runner
+require('http').createServer(app).listen(8081, () => {
+    console.log(chalk.red('StatusManager: ') + 'listening on port 8081');
+});
+app.use('/', (req, res) => {
+    console.log(chalk.red('StatusManager: ') + 'got http request');
+    res.end('ok');
+});
 
 const foxley = new discord.Client();
 foxley.images = new discord.Collection();
