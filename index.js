@@ -27,6 +27,7 @@ const app = new express();
 const foxleyPrefix = 'fa!';
 const foxxoPrefix = 'fx!';
 const boaPrefix = 'b!';
+const sniff122Prefix = 's!';
 
 // status runner
 require('http').createServer(app).listen(8081, () => {
@@ -43,6 +44,8 @@ const foxxo = new discord.Client();
 foxxo.images = new discord.Collection();
 const boa = new discord.Client();
 boa.images = new discord.Collection();
+const sniff122 = new discord.Client();
+sniff122.images = new discord.Collection();
 
 foxley.log = function log(message) {
     console.log(chalk.red('Foxley: ') + message);
@@ -52,6 +55,9 @@ foxxo.log = function log(message) {
 }
 boa.log = function log(message) {
     console.log(chalk.red('Boa: ') + message);
+}
+sniff122.log = function log(message) {
+    console.log(chalk.red('sniff122: ') + message);
 }
 
 foxley.on('ready', () => {
@@ -83,7 +89,17 @@ boa.on('ready', () => {
         boa.images.set(image.replace(/\..+/g, ''), `./images/boa/${image}`);
         boa.log(`Loaded image ${image} as ${image.replace(/\..+/g, '')}!`);
     }
-})
+});
+sniff122.on('ready', () => {
+    sniff122.log('OwO I\'m ready!');
+    sniff122.log(`Prefix: "${sniff122Prefix}"`);
+    sniff122.user.setActivity(`Lurking as always`, { type: 'WATCHING' });
+    const images = fs.readdirSync('./images/sniff122/');
+    for (const image of images) {
+        sniff122.images.set(image.replace(/\..+/g, ''), `./images/sniff122/${image}`);
+        sniff122.log(`Loaded image ${image} as ${image.replace(/\..+/g, '')}!`);
+    }
+});
 
 // handlers
 foxley.on('message', (message) => {
@@ -122,10 +138,24 @@ boa.on('message', (message) => {
         if (cmd === 'help') {
             message.reply(`FDSticker module Boa (prefix \`${boaPrefix}\`)
 
-Loaded stickers: ${boa.images.reduce((cur, val, key) => cur + '\n' + key, '')}`,);
+Loaded stickers: ${boa.images.reduce((cur, val, key) => cur + '\n' + key, '')}`);
         }
         if (!boa.images.get(cmd)) return;
         message.reply('', { files: [boa.images.get(cmd)] });
+    }
+});
+sniff122.on('message', (message) => {
+    if (message.author.bot || message.channel.type === 'dm') return;
+
+    if (message.content.toLowerCase().startsWith(sniff122Prefix)) {
+        let cmd = message.content.slice(sniff122Prefix.length).split(/ +/g)[0].toLowerCase();
+        if (cmd === 'help') {
+            message.reply(`FDSticker module sniff122 (prefix \`${sniff122Prefix}\`)
+
+Loaded stickers: ${sniff122.images.reduce((cur, val, key) => cur + '\n' + key, '')}`);
+        }
+        if (!sniff122.images.get(cmd)) return;
+        message.reply('', { files: [sniff122.images.get(cmd)] });
     }
 });
 
@@ -133,6 +163,7 @@ Loaded stickers: ${boa.images.reduce((cur, val, key) => cur + '\n' + key, '')}`,
 foxley.login(tokens.foxley);
 foxxo.login(tokens.foxxo);
 boa.login(tokens.boa);
+sniff122.login(tokens.sniff122);
 
 // exit on sigint
 process.on('SIGINT', () => {
@@ -145,5 +176,8 @@ process.on('SIGINT', () => {
     boa.log('Shutting down...');
     boa.destroy();
     boa.log('Offline.');
+    sniff122.log('Shutting down...');
+    sniff122.destroy();
+    sniff122.log('Offline.');
     process.exit();
 });
